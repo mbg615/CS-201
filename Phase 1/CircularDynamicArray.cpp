@@ -2,6 +2,7 @@
 // Created by Maddox Guthrie on 1/31/24.
 //
 #include <random>
+#include <stdexcept>
 
 template<class T>
 class CircularDynamicArray {
@@ -43,14 +44,14 @@ private:
         T pivot = arr[high];
         int i = low - 1;
 
-        for(int j = low; j < high; ++j) {
-            if(arr[j] <= pivot) {
-                std::swap(arr[++i + 1], arr[high]);
+        for (int j = low; j < high; ++j) {
+            if (arr[j] <= pivot) {
+                std::swap(arr[++i], arr[j]);
             }
         }
-
         std::swap(arr[i + 1], arr[high]);
-        return ++i;
+
+        return i + 1;
     }
 
     void quickSortHelper(T arr[], int low, int high) {
@@ -69,9 +70,9 @@ private:
             if(partitionIndex == k - 1) {
                 return array[partitionIndex];
             } else if(partitionIndex < k) {
-                return quickSelectHelper(arr, (partitionIndex + 1) % cap, high, k);
+                return quickSelectHelper(arr, partitionIndex + 1, high, k);
             } else {
-                return quickSelectHelper(arr, low, (partitionIndex - 1 + cap) % cap, k);
+                return quickSelectHelper(arr, low, partitionIndex - 1, k);
             }
         }
 
@@ -203,7 +204,17 @@ public:
 
     void Sort() {
         // We will be using QuickSort because some of the work has already been done
-        quickSortHelper(array, front, (front + size - 1) % cap);
+        T* arr = new T[size];
+        for(int i = 0; i < size ; i++) {
+            arr[i] = array[(front + i) % cap];
+        }
+
+        quickSortHelper(arr, 0, size - 1);
+        for(int i = 0; i < size ; i++) {
+            array[i] = arr[i];
+        }
+
+        front = 0;
     }
 
     int linearSearch(T e) {

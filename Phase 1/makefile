@@ -1,2 +1,2 @@
 all: 
-	g++ Phase1Main.cpp --std=c++20 -g -o Phase1
+	g++ Phase1Main.cpp --std=c++11 -o Phase1

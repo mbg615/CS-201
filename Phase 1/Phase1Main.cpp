@@ -40,8 +40,6 @@ int main(){
     for (int i=0; i< C.length();i++) cout << C[i] << " ";  cout << endl;
     // C => "3 4 5 6 7 8 100 200"
 
-    std::cout << "\nNext Section\n\n";
-
     CircularDynamicArray<int> A,B;
     for(int i=0; i<10;i++) A.addEnd(i);
     B = A;
