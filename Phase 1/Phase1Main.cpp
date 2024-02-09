@@ -1,7 +1,3 @@
-//
-// Created by Maddox Guthrie on 1/31/24.
-//
-
 #include <iostream>
 using namespace std;
 #include "CircularDynamicArray.cpp"
@@ -40,6 +36,8 @@ int main(){
     for (int i=0; i< C.length();i++) cout << C[i] << " ";  cout << endl;
     // C => "3 4 5 6 7 8 100 200"
 
+
+
     CircularDynamicArray<int> A,B;
     for(int i=0; i<10;i++) A.addEnd(i);
     B = A;
@@ -57,8 +55,8 @@ int main(){
     // A => "10 0 1 2 3 4 5 6 7 8 9 15 19" Search => 6
     cout << "Select is " << A.QSelect(3) << endl;
     // Select => 2
+
     A.Sort();
-    for (int i=0; i< A.length();i++) cout << A[i] << " ";  cout << endl;
     // A => "0 1 2 3 4 5 6 7 8 9 10 15 19"
     A.addEnd(11); A.addFront(1); A.addFront(2); A.addFront(3);
     cout << "capacity is " << A.capacity() << endl;

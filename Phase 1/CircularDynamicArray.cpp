@@ -25,7 +25,7 @@ private:
     }
 
     void shrink() {
-        T* newArray = new T[cap / 4];
+        T* newArray = new T[cap / 2];
 
         for(int i = 0; i < size; i++) {
             newArray[i] = array[(front + i) % cap];
@@ -33,7 +33,7 @@ private:
 
         delete[] array;
         array = newArray;
-        cap /= 4;
+        cap /= 2;
         front = 0;
     }
 
@@ -125,11 +125,17 @@ public:
     }
 
     T& operator[](int i) {
-        if(i < 0 || i >= cap) {
-            throw std::out_of_range("Index out of bounds: " + std::to_string(i) + "\n");
-        } else {
+        try {
+            if (i < 0 || i >= cap) {
+                throw std::out_of_range("Index out of bounds: " + std::to_string(i) + "\n");
+            }
+
             i = (front + i) % cap;
             return array[i];
+        }
+        catch(const std::out_of_range& e) {
+            std::cout << "Index out of bounds: " + std::to_string(i) + "\n";
+            return array[0];
         }
     }
 
@@ -185,7 +191,7 @@ public:
     void clear() {
         delete[] array;
         array = new T[cap = 2];
-        size = 0;
+        size = front = 0;
     }
 
     T QSelect(int k) {
@@ -203,7 +209,8 @@ public:
     }
 
     void Sort() {
-        // We will be using QuickSort because some of the work has already been done
+        // I will be using QuickSort because some of the work has already been done
+        // The partition function for QuickSelect can be reused.
         T* arr = new T[size];
         for(int i = 0; i < size ; i++) {
             arr[i] = array[(front + i) % cap];
@@ -228,18 +235,18 @@ public:
     }
 
     int binSearch(T e) {
-        int r = (front + size) % cap;
-        int l = front;
+        int right = (front + size) % cap;
+        int left = front;
 
-        while(l <= r) {
-            int m = l + (r - l) / 2;
+        while(left <= right) {
+            int mid = left + (right - left) / 2;
 
-            if(array[m] == e) {
-                return m;
-            } else if(array[m] < e) {
-                l = m + 1;
+            if(array[mid] == e) {
+                return mid;
+            } else if(array[mid] < e) {
+                left = mid + 1;
             } else {
-                r = m - 1;
+                right = mid - 1;
             }
         }
 
