@@ -11,6 +11,8 @@ private:
     int size;
     int front;
 
+    T outOfBoundsValue = T{};
+
     void grow() {
         T* newArray = new T[cap * 2];
 
@@ -135,7 +137,7 @@ public:
         }
         catch(const std::out_of_range& e) {
             std::cout << "Index out of bounds: " + std::to_string(i) + "\n";
-            return array[0];
+            return outOfBoundsValue;
         }
     }
 
