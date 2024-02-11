@@ -229,7 +229,7 @@ public:
     int linearSearch(T e) {
         for(int i = 0; i < size; i++) {
             if(array[(front + i) % cap] == e) {
-                return (front + i) % cap;
+                return i;
             }
         }
 
