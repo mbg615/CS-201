@@ -6,7 +6,7 @@ int main(){
     string K[12] = {"A","B","C","D","E","F","G","H","I","K","L","M"};
     int V[12] = {12,11,10,9,8,7,6,5,4,3,2,1};
 
-    two4Tree<string,int> T1(K,V,12) T2;
+    two4Tree<string,int> T1(K,V,12), T2;
 
     for(int i=0; i<12; i++) T2.insert(K[i],V[i]);
     // T1 and T2 should be the same trees
@@ -51,7 +51,7 @@ int main(){
     cout << T1.rank("I") << endl;
     //Should output 11
 
-    cout << T2.remove("H"); << endl;
+    cout << T2.remove("H") << endl;
     //Should output 1
 
     cout << *(T2.search("H")) << endl;

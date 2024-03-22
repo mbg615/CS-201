@@ -10,21 +10,31 @@ class two4Node {
 
 public:
     int numKeys;
-    K *keys;
-    CircularDynamicArray<V> values;
-    two4Node<K, V> *children;
+    K keys[3];
+    CircularDynamicArray<V> values[3];
+    two4Node<K, V> *children[4];
 
     two4Node() {
         numKeys = 0;
-        keys = new K[3]();
-        values.clear();
-        children = new two4Node<K,V>[4]();
     }
 
-    ~two4Node() {
-        delete[] keys;
-        delete values;
-        delete[] children;
+    bool isLeaf() {
+        for(auto & chileNode : children) {
+            if(chileNode != nullptr) return false;
+        }
+        return true;
+    }
+
+    void insertKey(K key, V value) {
+
+    }
+
+    void insertKey(K key, CircularDynamicArray<V> values) {
+
+    }
+
+    void insertDuplicate(K key, V value) {
+
     }
 
 private:

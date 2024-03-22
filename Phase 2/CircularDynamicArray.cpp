@@ -43,32 +43,6 @@ private:
         front = 0;
     }
 
-    int partition(T arr[], int low, int high) {
-        int randomIndex = low + int(random()) % (high - low + 1);
-        std::swap(arr[randomIndex], arr[high]);
-
-        T pivot = arr[high];
-        int i = low - 1;
-
-        for (int j = low; j < high; ++j) {
-            if (arr[j] <= pivot) {
-                std::swap(arr[++i], arr[j]);
-            }
-        }
-        std::swap(arr[i + 1], arr[high]);
-
-        return i + 1;
-    }
-
-    void quickSortHelper(T arr[], int low, int high) {
-        if(low < high) {
-            int partitionIndex = partition(arr, low, high);
-
-            quickSortHelper(arr, low, partitionIndex - 1);
-            quickSortHelper(arr, partitionIndex + 1, high);
-        }
-    }
-
 public:
     T* array;
 
@@ -81,33 +55,6 @@ public:
     explicit CircularDynamicArray(int s) {
         array = new T[cap = size = s];
         front = 0;
-    }
-
-    CircularDynamicArray(const CircularDynamicArray<T> &src) {
-        cap = src.cap;
-        size = src.size;
-        front = src.front;
-        array = new T[cap];
-        for(int i = 0; i < cap; i++) {
-            array[i] = src.array[i];
-        }
-    }
-    
-    CircularDynamicArray& operator=(const CircularDynamicArray &src) {
-        if(this == &src) {
-            return *this;
-        }
-
-        delete[] array;
-        cap = src.cap;
-        size = src.size;
-        front = src.front;
-        array = new T[cap];
-        for(int i = 0; i < cap; i++) {
-            array[i] = src.array[i];
-        }
-
-        return *this;
     }
 
     ~CircularDynamicArray() {
@@ -182,21 +129,5 @@ public:
         delete[] array;
         array = new T[cap = 2];
         size = front = 0;
-    }
-
-    void Sort() {
-        // I will be using QuickSort because some of the work has already been done
-        // The partition function for QuickSelect can be reused.
-        T* arr = new T[size];
-        for(int i = 0; i < size ; i++) {
-            arr[i] = array[(front + i) % cap];
-        }
-
-        quickSortHelper(arr, 0, size - 1);
-        for(int i = 0; i < size ; i++) {
-            array[i] = arr[i];
-        }
-
-        front = 0;
     }
 };
