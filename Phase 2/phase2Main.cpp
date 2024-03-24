@@ -10,6 +10,7 @@ int main(){
 
     for(int i=0; i<12; i++) T2.insert(K[i],V[i]);
     // T1 and T2 should be the same trees
+    exit(10);
 
     T1.preorder();
     //Should output "D\n B\n A\n C\n F H K\n E\n G\n I\n L M\n"
@@ -74,5 +75,7 @@ int main(){
         if(*(X.search(i)) != i) cout << "Search error" << endl;
     }
     //Should be no output and should take seconds, not minutes
+
+    std::cout << "Hello" << std::endl;
     return 0;
 }

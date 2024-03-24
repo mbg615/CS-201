@@ -19,7 +19,7 @@ public:
     }
 
     two4Tree(K keys[], V values[], int size) {
-        treeSize = size;
+        treeSize = 0;
         for(int i = 0; i < size; i++) {
             insert(keys[i], values[i]);
         }
@@ -34,7 +34,25 @@ public:
     }
 
     void insert(K key, V value) {
+        std::cout << "Inserting " << key << " : " << value << std::endl;
+
+        if(root == nullptr) {
+            root = new two4Node<K, V>();
+            root->insertKey(key, value);
+            treeSize++;
+            return;
+        }
+
+        if(root->numKeys == 3) {
+            auto *newRoot = new two4Node<K, V>();
+            splitNode(newRoot, root);
+            root = newRoot;
+            treeSize++;
+        }
+
         insertHelper(root, key, value);
+
+        std::cout << "end!\n";
     }
 
     int remove(K key) {
@@ -94,45 +112,66 @@ private:
         return searchHelper(node->children[i], key);
     }
 
-    void insertHelper(two4Node<K,V> *node, K key, V value) {
+    void insertHelper(two4Node<K,V> *currentNode, K key, V value) {
+        if(currentNode->isLeaf()) {
+            currentNode->insertKey(key, value);
+            return;
+        }
+
         int i = 0;
-        while(i < node->numKeys && key > node->keys[i]) {
+        while(i < currentNode->numKeys && key > currentNode->keys[i]) {
             i++;
         }
-        if(node->children[i]->numKeys == 3) {
-            split(node, node->children[i]);
+        if(currentNode->children[i]->numKeys == 3) {
+            splitNode(currentNode, currentNode->children[i]);
+            insertHelper(currentNode, key, value);
         }
-        if(i < node->numKeys && key == node->keys[i]) {
-            node->insertDuplicate(key, value);
-            return;
-        }
-        if(node->isLeaf()) {
-            node->insertKey(key, value);
-            return;
-        }
-        insertHelper(node->children[i], key, value);
+
+        insertHelper(currentNode->children[i], key, value);
     }
 
-    void split(two4Node<K,V> *parentNode, two4Node<K,V> *childNode) {
-        K middleKey = childNode->keys[1];
-        CircularDynamicArray<V> middleValue = childNode->values[1];
-        parentNode->insertKey(middleKey, middleValue);
-
-        int i = 0;
-        while (parentNode->keys[i] != middleKey) {
-            i++;
+    void splitNode(two4Node<K,V> *parentNode, two4Node<K,V> *childNode) {
+        if(childNode->numKeys != 3) {
+            return;
         }
 
-        auto *leftNode = new two4Node<K,V>;
-        leftNode->insertKey(childNode->keys[0], childNode->values[0]);
+        std::cout << "Splitting node (";
+        std::cout << childNode->keys[0] << ", " << childNode->keys[1] << ", " << childNode->keys[2] << ")\n";
+
+        for(int i = 0; i < childNode->values[1].length(); i++) {
+            parentNode->insertKey(childNode->keys[1], childNode->values[1][i]);
+        }
+
+        std::cout << "New root start: " << parentNode->keys[0] << parentNode->keys[1] << "\n";
+
+        auto *leftNode = new two4Node<K,V>();
+        auto *rightNode = new two4Node<K,V>();
+
+        leftNode->numKeys = 1;
+        leftNode->keys[0] = childNode->keys[0];
+        leftNode->values[0] = childNode->values[0];
         leftNode->children[0] = childNode->children[0];
         leftNode->children[1] = childNode->children[1];
-        auto *rightNode = new two4Node<K,V>;
-        rightNode->insertKey(childNode->keys[2], childNode->values[2]);
+
+
+        rightNode->numKeys = 1;
+        rightNode->keys[0] = childNode->keys[2];
+        rightNode->values[0] = childNode->values[2];
         rightNode->children[0] = childNode->children[2];
         rightNode->children[1] = childNode->children[3];
 
+        int i = 0;
+        while(i < parentNode->numKeys && childNode->keys[1] > parentNode->keys[i]) {
+            i++;
+        }
+
+        for (int j = parentNode->numKeys; j > i; j--) {
+            parentNode->children[j + 1] = parentNode->children[j];
+        }
+
         parentNode->children[i] = leftNode;
-        parentNode->children[i+1] = rightNode;
+        parentNode->children[i + 1] = rightNode;
+
+        delete childNode;
     }
 };

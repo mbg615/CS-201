@@ -57,6 +57,33 @@ public:
         front = 0;
     }
 
+    CircularDynamicArray(const CircularDynamicArray<T> &src) {
+        cap = src.cap;
+        size = src.size;
+        front = src.front;
+        array = new T[cap];
+        for(int i = 0; i < cap; i++) {
+            array[i] = src.array[i];
+        }
+    }
+
+    CircularDynamicArray& operator=(const CircularDynamicArray &src) {
+        if(this == &src) {
+            return *this;
+        }
+
+        delete[] array;
+        cap = src.cap;
+        size = src.size;
+        front = src.front;
+        array = new T[cap];
+        for(int i = 0; i < cap; i++) {
+            array[i] = src.array[i];
+        }
+
+        return *this;
+    }
+
     ~CircularDynamicArray() {
         delete[] array;
     }
