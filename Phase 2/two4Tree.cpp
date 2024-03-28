@@ -66,7 +66,7 @@ public:
     }
 
     int duplicates(K key) {
-        // ToDo: Implement Later
+        return duplicateHelper(root, key);
     }
 
     int size() {
@@ -97,7 +97,6 @@ private:
         }
     }
 
-
     V *searchHelper(two4Node<K,V> *currentNode, K key) {
         int i = 0;
         while(i < currentNode->numKeys && key > currentNode->keys[i]) {
@@ -113,15 +112,17 @@ private:
     }
 
     void insertHelper(two4Node<K,V> *currentNode, K key, V value) {
-        if(currentNode->isLeaf()) {
-            currentNode->insertKey(key, value);
-            return;
-
-        }
-
         int i = 0;
         while(i < currentNode->numKeys && key > currentNode->keys[i]) {
             i++;
+        }
+        if(currentNode->keys[i] == key) {
+            currentNode->insertKey(key, value);
+            return;
+        }
+        if(currentNode->isLeaf()) {
+            currentNode->insertKey(key, value);
+            return;
         }
         if(currentNode->children[i]->numKeys == 3) {
             splitNode(currentNode, currentNode->children[i]);
@@ -136,9 +137,6 @@ private:
             return;
         }
 
-//        std::cout << "Splitting node (";
-//        std::cout << childNode->keys[0] << ", " << childNode->keys[1] << ", " << childNode->keys[2] << ")\n";
-
         for(int i = 0; i < childNode->values[1].length(); i++) {
             parentNode->insertKey(childNode->keys[1], childNode->values[1][i]);
         }
@@ -151,7 +149,6 @@ private:
         leftNode->values[0] = childNode->values[0];
         leftNode->children[0] = childNode->children[0];
         leftNode->children[1] = childNode->children[1];
-
 
         rightNode->numKeys = 1;
         rightNode->keys[0] = childNode->keys[2];
@@ -177,10 +174,13 @@ private:
     void preorderHelper(two4Node<K,V> *currentNode) {
         if(currentNode != nullptr) {
             for(int i = 0; i < currentNode->numKeys; i++) {
-                std::cout << currentNode->keys[i];
-                if(i < currentNode->numKeys - 1) {
-                    std::cout << " ";
-                } else {
+                for(int j = 0; j < currentNode->values[i].length(); j++) {
+                    std::cout << currentNode->keys[i];
+                    if(i < currentNode->numKeys - 1) {
+                        std::cout << " ";
+                    }
+                }
+                if(i >= currentNode->numKeys - 1) {
                     std::cout << "\n";
                 }
             }
@@ -194,14 +194,26 @@ private:
     void inorderHelper(two4Node<K,V> *currentNode) {
         if(currentNode != nullptr) {
             inorderHelper(currentNode->children[0]);
-            std::cout << currentNode->keys[0];
-            if(currentNode->numKeys >= 1) std::cout << " ";
+            for(int j = 0; j < currentNode->values[0].length(); j++) {
+                std::cout << currentNode->keys[0];
+                if(-1 < currentNode->numKeys - 1) {
+                    std::cout << " ";
+                }
+            }
             inorderHelper(currentNode->children[1]);
-            std::cout << currentNode->keys[1];
-            if(currentNode->numKeys >= 2) std::cout << " ";
+            for(int j = 0; j < currentNode->values[1].length(); j++) {
+                std::cout << currentNode->keys[1];
+                if(0 < currentNode->numKeys - 1) {
+                    std::cout << " ";
+                }
+            }
             inorderHelper(currentNode->children[2]);
-            std::cout << currentNode->keys[2];
-            if(currentNode->numKeys >= 3) std::cout << " ";
+            for(int j = 0; j < currentNode->values[2].length(); j++) {
+                std::cout << currentNode->keys[2];
+                if(1 < currentNode->numKeys - 1) {
+                    std::cout << " ";
+                }
+            }
             inorderHelper(currentNode->children[3]);
         }
     }
@@ -213,13 +225,31 @@ private:
             postorderHelper(currentNode->children[2]);
             postorderHelper(currentNode->children[3]);
             for(int i = 0; i < currentNode->numKeys; i++) {
-                std::cout << currentNode->keys[i];
-                if(i < currentNode->numKeys - 1) {
-                    std::cout << " ";
-                } else {
+                for(int j = 0; j < currentNode->values[i].length(); j++) {
+                    std::cout << currentNode->keys[i];
+                    if(i < currentNode->numKeys - 1) {
+                        std::cout << " ";
+                    }
+                }
+                if(i >= currentNode->numKeys - 1) {
                     std::cout << "\n";
                 }
             }
         }
     }
+
+    int duplicateHelper(two4Node<K,V> *currentNode, K key) {
+        int i = 0;
+        while(i < currentNode->numKeys && key > currentNode->keys[i]) {
+            i++;
+        }
+        if(i < currentNode->numKeys && key == currentNode->keys[i]) {
+            return currentNode->values[i].length();
+        }
+        if(currentNode->isLeaf() || currentNode == nullptr) {
+            return 0;
+        }
+        return duplicateHelper(currentNode->children[i], key);
+    }
+
 };

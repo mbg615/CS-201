@@ -113,26 +113,6 @@ public:
         size++;
     }
 
-    void addFront(T v) {
-        if (size == cap) {
-            grow();
-        }
-
-        front = (front - 1 + cap) % cap;
-        array[front] = v;
-        size++;
-    }
-
-    void delEnd() {
-        if(size > 0) {
-            size--;
-        }
-
-        if(size < cap / 4) {
-            shrink();
-        }
-    }
-
     void delFront() {
         if(size > 0) {
             front = (front + 1) % cap;
@@ -146,10 +126,6 @@ public:
 
     int length() {
         return size;
-    }
-
-    int capacity() {
-        return cap;
     }
 
     void clear() {
