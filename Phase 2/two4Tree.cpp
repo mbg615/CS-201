@@ -116,17 +116,21 @@ private:
         while(i < currentNode->numKeys && key > currentNode->keys[i]) {
             i++;
         }
+
         if(currentNode->keys[i] == key) {
             currentNode->insertKey(key, value);
             return;
         }
+
         if(currentNode->isLeaf()) {
             currentNode->insertKey(key, value);
             return;
         }
+
         if(currentNode->children[i]->numKeys == 3) {
             splitNode(currentNode, currentNode->children[i]);
             insertHelper(currentNode, key, value);
+            return;
         }
 
         insertHelper(currentNode->children[i], key, value);
