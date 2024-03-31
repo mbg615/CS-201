@@ -51,6 +51,56 @@ public:
         }
     }
 
+    void deleteKey(K key) {
+        int i = 0;
+        while(i < numKeys && key > keys[i]) {
+            i++;
+        }
+
+        if(isLeaf()) {
+            int j = i;
+            while(j < numKeys) {
+                keys[j] = keys[j + 1];
+                values[j] = values[j + 1];
+            }
+            return;
+        }
+
+        // ToDo: Finish
+
+
+    }
+
+//    int deleteKey(K key) {
+//        // ToDO: Verify this is correct
+//        int i = 0;
+//        while(i < numKeys && key > keys[i]) {
+//            i++;
+//        }
+//
+//        if(keys[i] == key) {
+//            if(values[i].length() > 1) {
+//                values[i].delFront();
+//                return 1;
+//            }
+//
+//            for(int j = i; j < numKeys - 1; j++) {
+//                keys[j] = keys[j + 1];
+//                values[j] = values[j + 1];
+//                children[j] = children[j + 1];
+//                children[j + 1] = children[j + 2];
+//            }
+//            keys[numKeys - 1] = K();
+//            values[numKeys - 1] = V();
+//            children[numKeys] = nullptr;
+//            numKeys--;
+//
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+
 private:
 
 };
