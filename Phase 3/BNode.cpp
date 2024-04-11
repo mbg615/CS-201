@@ -4,13 +4,14 @@
 
 #include "BNode.cpp"
 
-template<class T>
+template<class K>
 class BNode {
 private:
     int heapType;
-    BNode<T> *leftNode;
-    BNode<T> *rightNode;
-    BNode<T> *children;
+    K key;
+    BNode<K> *leftNode;
+    BNode<K> *rightNode;
+    BNode<K> *children;
 
 public:
 

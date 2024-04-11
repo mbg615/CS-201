@@ -4,16 +4,55 @@
 
 #include "BNode.cpp"
 
-template<class T>
+template<class K>
 class BHeap {
 private:
-    BNode<T> *minElement; // Pointer to minimum element in heap
-    BNode<T> *heapStart; // Pointer to first element in heap
+    BNode<K> *minElement; // Pointer to minimum element in heapBNode<T> *heapStart; // Pointer to first element in heap
 
 public:
+    BHeap() {
 
+    }
+
+    BHeap(K keys[], int s) {
+
+    }
+
+    BHeap(const BHeap<T> &src) {
+
+    }
+
+    BHeap& operator=(const BHeap<T> &src) {
+
+    }
+
+    ~BHeap() {
+
+    }
+
+    K peekKey() {
+
+    }
+
+    K extractMin() {
+
+    }
+
+    void insert(K key) {
+
+    }
+
+    void merge(BHeap<K> &H2) {
+
+    }
+
+    void printKey() {
+
+    }
 
 private:
+    void consolidate() {
 
+    }
 
 };
