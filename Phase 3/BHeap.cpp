@@ -23,7 +23,7 @@ public:
             insert(keys[i]);
         }
 
-        consolidate();
+        // ToDo: consolidate();
     }
 
     BHeap(const BHeap<K> &src) {
@@ -54,26 +54,60 @@ public:
                 delete minElement;
                 minElement = nullptr;
                 size = 0;
+            } else {
+                // Assign new minimum
+                BNode<K> *currentNode = minElement->children;
+                BNode<K> *newMin = minElement->children;
+                do {
+                    if(currentNode->key < newMin->key) newMin = currentNode;
+                    currentNode = currentNode->rightNode;
+                } while(currentNode != minElement->children);
+
+                delete minElement;
+                minElement = newMin;
+                size--;
+                // ToDo: consolidate();
             }
 
-            minElement = minElement->children;
             return minKey;
         }
 
         if(minElement->children == nullptr) { // No children check
             minElement->leftNode->rightNode = minElement->rightNode;
-            BNode<K> *possibleMin = nullptr; // Assign new minElement
-            if(minElement->leftNode < minElement->rightNode) {
-                possibleMin = minElement->leftNode;
-            } else {
-                possibleMin = minElement->rightNode;
-            }
             minElement->rightNode->leftNode = minElement->leftNode;
+
+            // Assign new minimum
+            BNode<K> *currentNode = minElement->rightNode;
+            BNode<K> *newMin = minElement->rightNode;
+            do {
+                if(currentNode->key < newMin->key) newMin = currentNode;
+                currentNode = currentNode->rightNode;
+            } while(currentNode != minElement->rightNode);
+
             delete minElement;
-            minElement = possibleMin;
+            minElement = newMin;
+            size--;
+            // ToDo: consolidate();
+            return minKey;
         }
 
+        minElement->leftNode->rightNode = minElement->children;
+        minElement->rightNode->leftNode = minElement->children->leftNode;
+        minElement->children->leftNode->rightNode = minElement->rightNode;
+        minElement->children->leftNode = minElement->leftNode;
+
+        // Assign new minimum
+        BNode<K> *currentNode = minElement->rightNode;
+        BNode<K> *newMin = minElement->rightNode;
+        do {
+            if(currentNode->key < newMin->key) newMin = currentNode;
+            currentNode = currentNode->rightNode;
+        } while(currentNode != minElement->rightNode);
+
+        delete minElement;
+        minElement = newMin;
         size--;
+        // ToDo: consolidate();
         return minKey;
     }
 
@@ -91,7 +125,7 @@ public:
         minElement->leftNode->rightNode = newNode;
         minElement->leftNode = newNode;
 
-        if(key < minElement->key) { // Reassign minElement;
+        if(newNode->key < minElement->key) { // Reassign minElement;
             minElement = newNode;
         }
 

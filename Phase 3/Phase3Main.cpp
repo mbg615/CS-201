@@ -3,25 +3,37 @@ using namespace std;
 #include "BHeap.cpp"
 
 int main(){
-    char K1[6] = {'a','f','g','h','i','j'};
-    char K2[4] = {'b','c','d','e'};
+//    char K1[6] = {'a','f','g','h','i','j'};
+//    char K2[4] = {'b','c','d','e'};
 
-    BHeap<char> myH1, myH2;
-    for(int i=0; i<6; i++) myH1.insert(K1[i]);
-    for(int i=0; i<4; i++) myH2.insert(K2[i]);
+    char K1[10] = {'g','b','c','d','e','f','a','h','i','j'};
+    char K2[10] = {'j','i','h','g','f','e','d','c','b','a'};
+
+    BHeap<char> myH1, myH2(K2,10);
+    for(int i=0; i<10; i++) myH1.insert(K2[i]);
+//    for(int i=0; i<4; i++) myH2.insert(K2[i]);
 
 
-    std::cout << "\nH1\n";
-    myH1.printKey();
-
-    std::cout << "\nMerge\n";
-    myH1.merge(myH2);
 
     std::cout << "\nH1\n";
     myH1.printKey();
 
     std::cout << "\nH2\n";
     myH2.printKey();
+//    std::cout << "\nH2\n";
+//    myH2.printKey();
+//
+//    std::cout << "\nMerge\n";
+//    myH1.merge(myH2);
+
+//    std::cout << "\nH1\n";
+//    myH1.printKey();
+
+//    std::cout << "\nH2\n";
+//    myH2.printKey();
+
+//    myH1.printKey();
+//    std::cout << "\n\n\n";
 
     std::cout << "Extracted: " << myH1.extractMin() << "\n";
     std::cout << "New Min: " << myH1.peekKey() << "\n";
