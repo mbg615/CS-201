@@ -23,7 +23,7 @@ public:
             insert(keys[i]);
         }
 
-        // ToDo: consolidate();
+        consolidate();
     }
 
     BHeap(const BHeap<K> &src) {
@@ -130,7 +130,7 @@ public:
         H2.minElement = nullptr;
         H2.size = 0;
 
-        consolidate();
+        // ToDo: consolidate();
     }
 
     void printKey() {
@@ -160,7 +160,6 @@ private:
     }
 
     void consolidate() {
-        std::cout << "Consolidate called\n";
         if(minElement == nullptr) return;
 
         int arraySize = log2(size) + 1;
@@ -172,6 +171,7 @@ private:
         do {
             while(treeArray[workingNode->heapType] != nullptr) {
                 workingNode = mergeNodes(workingNode, treeArray[workingNode->heapType]);
+                treeArray[workingNode->heapType - 1] = nullptr;
             }
 
             treeArray[workingNode->heapType] = workingNode;
@@ -183,7 +183,7 @@ private:
         int end;
 
         for(int i = 0; i < arraySize; i++) {
-            if(treeArray[i] == nullptr || treeArray[i]->key < minElement->key) minElement = treeArray[i];
+            if(treeArray[i] != nullptr && treeArray[i]->key < minElement->key) minElement = treeArray[i];
             if(start == -1 && treeArray[i] != nullptr) start = i;
             if(treeArray[i] != nullptr) end = i;
         }
@@ -205,17 +205,23 @@ private:
         if (!node1) return node2;
         if (!node2) return node1;
 
-        // Ensure node1 has smaller key
+        // Ensure node1 has smaller key.
         if (node2->key < node1->key) {
             std::swap(node1, node2);
         }
 
-        // Make node2 child of node1
-        node2->rightNode = node1->children;
-        if (node1->children) {
+        // If node one has no children, node2 becomes node1's child.
+        if(node1->children == nullptr) {
+            node1->children = node2;
+            node2->leftNode = node2;
+            node2->rightNode = node2;
+        // link node2 into node1's child list.
+        } else {
+            node2->rightNode = node1->children;
+            node2->leftNode = node1->children->leftNode;
+            node1->children->leftNode->rightNode = node2;
             node1->children->leftNode = node2;
         }
-        node1->children = node2;
 
         // Update heap type and return node1
         node1->heapType++;
