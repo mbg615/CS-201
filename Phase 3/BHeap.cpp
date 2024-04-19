@@ -36,6 +36,7 @@ public:
     }
 
     ~BHeap() {
+        std::cout << "Destructor called\n";
         destructorHelper(minElement);
     }
 
@@ -55,14 +56,7 @@ public:
                 minElement = nullptr;
                 size = 0;
             } else {
-                // Assign new minimum
-                BNode<K> *currentNode = minElement->children;
                 BNode<K> *newMin = minElement->children;
-                do {
-                    if(currentNode->key < newMin->key) newMin = currentNode;
-                    currentNode = currentNode->rightNode;
-                } while(currentNode != minElement->children);
-
                 delete minElement;
                 minElement = newMin;
                 size--;
@@ -96,14 +90,7 @@ public:
         minElement->children->leftNode->rightNode = minElement->rightNode;
         minElement->children->leftNode = minElement->leftNode;
 
-        // Assign new minimum
-        BNode<K> *currentNode = minElement->rightNode;
-        BNode<K> *newMin = minElement->rightNode;
-        do {
-            if(currentNode->key < newMin->key) newMin = currentNode;
-            currentNode = currentNode->rightNode;
-        } while(currentNode != minElement->rightNode);
-
+        BNode<K> *newMin = minElement->children;
         delete minElement;
         minElement = newMin;
         size--;
@@ -156,13 +143,10 @@ public:
             currentNode = currentNode->rightNode;
             std::cout << "\n";
         } while(currentNode != minElement);
-
-        std::cout << "\n\n\n";
     }
 
 private:
     void destructorHelper(BNode<K> *currentNode) {
-        return;
         if(currentNode == nullptr) return;
 
         if(currentNode->children == nullptr) {
@@ -176,92 +160,45 @@ private:
     }
 
     void consolidate() {
-        std::cout << "Consolidate called" << std::endl;
-        int maxTreeRank = log2(size);
+        std::cout << "Consolidate called\n";
+        if(minElement == nullptr) return;
 
-        std::vector<BNode<K>*> BTrees(maxTreeRank);
+        int arraySize = log2(size) + 1;
+        std::vector<BNode<K>*> treeArray(arraySize, nullptr);
+
         BNode<K> *workingNode = minElement;
         BNode<K> *nextNode = minElement->rightNode;
 
         do {
-            std::cout << "Doing for Key: " << workingNode->key << " Heap type: " << workingNode->heapType << std::endl;
-
-            while(BTrees[workingNode->heapType] != nullptr) {
-                std::cout << "Ran here!\n";
-                workingNode = mergeNodes(workingNode, BTrees[workingNode->heapType]);
-                BTrees[workingNode->heapType - 1] = nullptr;
+            while(treeArray[workingNode->heapType] != nullptr) {
+                workingNode = mergeNodes(workingNode, treeArray[workingNode->heapType]);
             }
 
-            BTrees[workingNode->heapType] = workingNode;
+            treeArray[workingNode->heapType] = workingNode;
             workingNode = nextNode;
             nextNode = nextNode->rightNode;
+        } while(workingNode->key != minElement->key);
 
-        } while(workingNode != minElement and workingNode != nullptr);
+        int start = -1;
+        int end;
 
-        int i, prev, end;
-
-        for(i = 0; i < maxTreeRank; i++) {
-            if(BTrees[i] != nullptr) break;
+        for(int i = 0; i < arraySize; i++) {
+            if(treeArray[i] == nullptr || treeArray[i]->key < minElement->key) minElement = treeArray[i];
+            if(start == -1 && treeArray[i] != nullptr) start = i;
+            if(treeArray[i] != nullptr) end = i;
         }
 
-        prev = i;
-
-        for(end = maxTreeRank - 1; end >= i; end--) {
-            if(BTrees[end] != nullptr) break;
-        }
-
-        BTrees[i]->leftNode = BTrees[end];
-        BTrees[end]->rightNode = BTrees[i];
-
-        for(i += 1; i < end; i++) {
-            if(BTrees[i] != nullptr) {
-                BTrees[i]->leftNode = BTrees[prev];
-                BTrees[prev]->rightNode = BTrees[i];
-                prev = i;
+        int prev = start;
+        for(int i = start + 1; i <= end; i++) {
+            if(treeArray[i] != nullptr) {
+                treeArray[prev]->rightNode = treeArray[i];
+                treeArray[i]->leftNode = treeArray[prev];
             }
         }
 
-        minElement = nullptr;
-
-        for(i = 0; i <= end; i++) {
-            if(BTrees[i] != nullptr) {
-                if(minElement == nullptr || BTrees[i]->key < minElement->key) {
-                    minElement = BTrees[i];
-                }
-            }
-        }
+        treeArray[start]->leftNode = treeArray[end];
+        treeArray[end]->rightNode = treeArray[start];
     }
-
-//    BNode<K> *mergeNodes(BNode<K> *node1, BNode<K> *node2) {
-//        if(node2->key < node1->key) {
-//            if(node2->children == nullptr) {
-//                node2->children = node1;
-//                node2->heapType++;
-//                return node2;
-//            }
-//
-//            node2->children->leftNode->rightNode = node1;
-//            node1->leftNode = node2->children->leftNode;
-//            node2->children->leftNode = node1;
-//            node1->rightNode = node2->children;
-//            node2->heapType++;
-//            return node2;
-//        }
-//        else {
-//            if(node1->children == nullptr) {
-//                node1->children = node2;
-//                node1->heapType++;
-//                return node1;
-//            }
-//
-//            node1->children->leftNode->rightNode = node2;
-//            node2->leftNode = node1->children->leftNode;
-//            node1->children->leftNode = node2;
-//            node2->rightNode = node1->children;
-//            node1->heapType++;
-//            return node1;
-//        }
-//    }
 
     BNode<K>* mergeNodes(BNode<K>* node1, BNode<K>* node2) {
         // Check if either node is NULL
