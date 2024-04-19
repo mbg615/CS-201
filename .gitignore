@@ -31,8 +31,12 @@
 *.exe
 *.out
 *.app
+Phase1
+Phase1.dSYM/
 Phase2
 Phase2.dSYM/
+Phase3
+Phase3.dSYM/
 
 ### JetBrains+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
