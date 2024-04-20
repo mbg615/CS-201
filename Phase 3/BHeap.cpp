@@ -36,6 +36,7 @@ public:
     }
 
     ~BHeap() {
+        return;
         destructorHelper(minElement);
     }
 
