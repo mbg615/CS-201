@@ -60,7 +60,7 @@ public:
                 delete minElement;
                 minElement = newMin;
                 size--;
-                // ToDo: consolidate();
+                consolidate();
             }
 
             return minKey;
@@ -81,7 +81,7 @@ public:
             delete minElement;
             minElement = newMin;
             size--;
-            // ToDo: consolidate();
+            consolidate();
             return minKey;
         }
 
@@ -94,7 +94,7 @@ public:
         delete minElement;
         minElement = newMin;
         size--;
-        // ToDo: consolidate();
+        consolidate();
         return minKey;
     }
 
@@ -122,15 +122,21 @@ public:
     void merge(BHeap<K> &H2) {
         if(H2.minElement == nullptr) return; // No H2 check
 
-        minElement->leftNode->rightNode = H2.minElement;
-        H2.minElement->leftNode->rightNode = minElement;
-        BNode<K> *H2End = H2.minElement->leftNode;
-        H2.minElement->leftNode = minElement->leftNode;
-        H2End->rightNode = minElement;
+        H2.minElement->leftNode->rightNode = this->minElement;
+        BNode<K> *thisEnd = this->minElement->leftNode;
+        this->minElement->leftNode = H2.minElement->leftNode;
+        thisEnd->rightNode = H2.minElement;
+        H2.minElement->leftNode = thisEnd;
+
+        if(H2.minElement->key < this->minElement->key) {
+            this->minElement = H2.minElement;
+        }
+
+        this->size += H2.size;
         H2.minElement = nullptr;
         H2.size = 0;
 
-        // ToDo: consolidate();
+        consolidate();
     }
 
     void printKey() {
@@ -182,12 +188,14 @@ private:
         int start = -1;
         int end;
 
+        // Find the start and end indices
         for(int i = 0; i < arraySize; i++) {
             if(treeArray[i] != nullptr && treeArray[i]->key < minElement->key) minElement = treeArray[i];
             if(start == -1 && treeArray[i] != nullptr) start = i;
             if(treeArray[i] != nullptr) end = i;
         }
 
+        // Reconstruct root list from treeArray.
         int prev = start;
         for(int i = start + 1; i <= end; i++) {
             if(treeArray[i] != nullptr) {
