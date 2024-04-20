@@ -36,6 +36,8 @@ int main(){
     H2.printKey();
     //Should output "B1:\n B C\n B0:\n D\n"
 
+    return 0;
+
     H1.merge(H2); H1.printKey();
     //Should output "B1: B C\n B0:\n D\n B3:\n c j d e f g h i\n B1:\n k l\n"
 

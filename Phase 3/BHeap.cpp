@@ -36,7 +36,6 @@ public:
     }
 
     ~BHeap() {
-        std::cout << "Destructor called\n";
         destructorHelper(minElement);
     }
 
