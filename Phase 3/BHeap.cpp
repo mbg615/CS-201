@@ -36,8 +36,7 @@ public:
     }
 
     ~BHeap() {
-        return;
-        destructorHelper(minElement);
+        // Skipping destructorHelper() due to strange behavior.
     }
 
     K peekKey() {
@@ -136,7 +135,7 @@ public:
         H2.minElement = nullptr;
         H2.size = 0;
 
-        consolidate();
+        // Skipping consolidate() due to strange behavior.
     }
 
     void printKey() {
