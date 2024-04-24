@@ -52,19 +52,21 @@ public:
     }
 
     int remove(K key) {
-        if(root == nullptr) {
-            return 0;
-        }
-
-        removeHelper(root, key);
-        treeSize--;
+//        if(root == nullptr) {
+//            return 0;
+//        }
+//
+//        removeHelper(root, key);
+//        treeSize--;
     }
 
     int rank(K key) {
+        return 0;
         // ToDo: Implement Later
     }
 
     K select(int pos) {
+        return K();
         // ToDo: Implement Later
     }
 
@@ -178,139 +180,139 @@ private:
         delete childNode;
     }
 
-    int removeHelper(two4Node<K,V> *currentNode, K key) {
-        if(currentNode == nullptr) return 0;
+//    int removeHelper(two4Node<K,V> *currentNode, K key) {
+//        if(currentNode == nullptr) return 0;
+//
+//        int i = 0;
+//        while(i < currentNode->numKeys && key < currentNode->keys[i]) {
+//            i++;
+//        }
+//
+//        if(currentNode->keys[i] == key) {
+//            if(currentNode->isLeaf()) {
+//                currentNode->deleteKey(key);
+//                return 1;
+//            }
+//
+//            /* ToDo: Key found, find predecessor
+//             *
+//             */
+//
+//            return 1;
+//        }
+//
+//        if(currentNode->children[i] == nullptr) return 0;
+//
+//        if(currentNode->children[i]->numKeys == 1) {
+//            mergeHelper(currentNode, i);
+//            /* ToDo: Figure out next steps
+//            *
+//            */
+//        }
+//
+//        removeHelper(currentNode->children[i], key);
+//    }
 
-        int i = 0;
-        while(i < currentNode->numKeys && key < currentNode->keys[i]) {
-            i++;
-        }
+//    two4Node<K,V> *findPredecessor(two4Node<K,V> *currentNode, int keyIndex) {
+//        // ToDo: Verify correctness
+//        if(currentNode == nullptr) return nullptr;
+//
+//        if(currentNode->isLeaf()) return currentNode;
+//
+//        if(currentNode->children[keyIndex]->numKeys == 1) {
+//            mergeHelper(currentNode, keyIndex);
+//        }
+//
+//        findPredecessor(currentNode->children[keyIndex], currentNode->children[keyIndex]->numKeys);
+//    }
 
-        if(currentNode->keys[i] == key) {
-            if(currentNode->isLeaf()) {
-                currentNode->deleteKey(key);
-                return 1;
-            }
-
-            /* ToDo: Key found, find predecessor
-             *
-             */
-
-            return 1;
-        }
-
-        if(currentNode->children[i] == nullptr) return 0;
-
-        if(currentNode->children[i]->numKeys == 1) {
-            mergeHelper(currentNode, i);
-            /* ToDo: Figure out next steps
-            *
-            */
-        }
-
-        removeHelper(currentNode->children[i], key);
-    }
-
-    two4Node<K,V> *findPredecessor(two4Node<K,V> *currentNode, int keyIndex) {
-        // ToDo: Verify correctness
-        if(currentNode == nullptr) return nullptr;
-
-        if(currentNode->isLeaf()) return currentNode;
-
-        if(currentNode->children[keyIndex]->numKeys == 1) {
-            mergeHelper(currentNode, keyIndex);
-        }
-
-        findPredecessor(currentNode->children[keyIndex], currentNode->children[keyIndex]->numKeys);
-    }
-
-    void mergeHelper(two4Node<K,V> *parentNode, int nodeIndex) {
-        switch(nodeIndex) {
-            case 0:
-            case 1:
-            case 2:
-                // Merge right sibling.
-                if(parentNode->children[nodeIndex + 1]->numKeys == 1) {
-                    auto *mergedNode = new two4Node<K,V>();
-                    // Add keys
-                    mergedNode->numKeys = 3;
-                    mergedNode->keys[0] = parentNode->children[nodeIndex]->keys[0];
-                    mergedNode->keys[1] = parentNode->keys[nodeIndex];
-                    mergedNode->keys[2] = parentNode->children[nodeIndex + 1]->keys[0];
-                    // Add values
-                    mergedNode->values[0] = parentNode->children[nodeIndex]->values[0];
-                    mergedNode->values[1] = parentNode->values[nodeIndex];
-                    mergedNode->values[2] = parentNode->children[nodeIndex + 1]->values[0];
-                    // Link children
-                    mergedNode->children[0] = parentNode->children[nodeIndex]->children[0];
-                    mergedNode->children[1] = parentNode->children[nodeIndex]->children[1];
-                    mergedNode->children[2] = parentNode->children[nodeIndex+1]->children[0];
-                    mergedNode->children[3] = parentNode->children[nodeIndex+1]->children[1];
-                    // Delete old children
-                    delete parentNode->children[nodeIndex];
-                    delete parentNode->children[nodeIndex + 1];
-                    // Delete parent key
-                    parentNode->deleteKey(parentNode->keys[nodeIndex]);
-                    parentNode->children[nodeIndex + 1] = mergedNode;
-                    // Rotate from right sibling.
-                } else {
-                    // Add key to left child
-                    parentNode->children[nodeIndex]->insertKey(parentNode->keys[nodeIndex],parentNode->values[nodeIndex]);
-                    // Delete old key from parent
-                    parentNode->deleteKey(parentNode->keys[nodeIndex]);
-                    // Add new key to parent
-                    parentNode->insertKey(parentNode->children[nodeIndex + 1]->keys[0]);
-                    // Delete key from right child
-                    parentNode->children[nodeIndex + 1]->deleteKey(parentNode->children[nodeIndex + 1]->keys[0]);
-                    // Link leftmost right child's child to rightmost left child's child.
-                    parentNode->children[nodeIndex]->children[parentNode->children[nodeIndex]->numKeys] = parentNode->children[nodeIndex + 1]->children[0];
-                }
-                break;
-
-            case 3:
-                // Merge left sibling
-                if(parentNode->children[nodeIndex - 1]->numKeys == 1) {
-                    auto *mergedNode = new two4Node<K,V>();
-                    // Add Keys
-                    mergedNode->numKeys = 3;
-                    mergedNode->keys[0] = parentNode->children[nodeIndex - 1]->keys[0];
-                    mergedNode->keys[1] = parentNode->keys[nodeIndex - 1];
-                    mergedNode->keys[2] = parentNode->children[nodeIndex]->keys[0];
-                    // Add Values
-                    mergedNode->values[0] = parentNode->children[nodeIndex - 1]->values[0];
-                    mergedNode->values[1] = parentNode->values[nodeIndex - 1];
-                    mergedNode->values[2] = parentNode->children[nodeIndex]->values[0];
-                    // Link Children
-                    mergedNode->children[0] = parentNode->children[nodeIndex - 1]->children[0];
-                    mergedNode->children[1] = parentNode->children[nodeIndex - 1]->children[1];
-                    mergedNode->children[2] = parentNode->children[nodeIndex]->children[0];
-                    mergedNode->children[3] = parentNode->children[nodeIndex]->children[1];
-                    // Delete old children
-                    delete parentNode->children[nodeIndex - 1];
-                    delete parentNode->children[nodeIndex];
-                    // Delete parent key
-                    parentNode->deleteKey(parentNode->keys[nodeIndex - 1]);
-                    parentNode->children[nodeIndex] = mergedNode;
-                    // Rotate from left sibling
-                } else {
-                    // Add key to left child
-                    parentNode->children[nodeIndex]->insertKey(parentNode->keys[nodeIndex - 1]);
-                    // Delete old key from parent
-                    parentNode->deleteKey(parentNode->keys[nodeIndex - 1]);
-                    // Add new key to parent
-                    parentNode->insertKey(parentNode->children[nodeIndex - 1]->keys[parentNode->children[nodeIndex - 1]->numKeys]);
-                    // Delete key from right child
-                    parentNode->children[nodeIndex - 1]->deleteKey(parentNode->children[nodeIndex - 1]->keys[parentNode->children[nodeIndex - 1]->numKeys]);
-                    // Link leftmost right child's child to rightmost left child's child.
-                    parentNode->children[nodeIndex]->children[0] = parentNode->children[nodeIndex - 1]->children[parentNode->children[nodeIndex - 1]->numKeys];
-                }
-                break;
-
-            default:
-                std::cout << "Default Case Reached?" << std::endl;
-                return;
-        }
-    }
+//    void mergeHelper(two4Node<K,V> *parentNode, int nodeIndex) {
+//        switch(nodeIndex) {
+//            case 0:
+//            case 1:
+//            case 2:
+//                // Merge right sibling.
+//                if(parentNode->children[nodeIndex + 1]->numKeys == 1) {
+//                    auto *mergedNode = new two4Node<K,V>();
+//                    // Add keys
+//                    mergedNode->numKeys = 3;
+//                    mergedNode->keys[0] = parentNode->children[nodeIndex]->keys[0];
+//                    mergedNode->keys[1] = parentNode->keys[nodeIndex];
+//                    mergedNode->keys[2] = parentNode->children[nodeIndex + 1]->keys[0];
+//                    // Add values
+//                    mergedNode->values[0] = parentNode->children[nodeIndex]->values[0];
+//                    mergedNode->values[1] = parentNode->values[nodeIndex];
+//                    mergedNode->values[2] = parentNode->children[nodeIndex + 1]->values[0];
+//                    // Link children
+//                    mergedNode->children[0] = parentNode->children[nodeIndex]->children[0];
+//                    mergedNode->children[1] = parentNode->children[nodeIndex]->children[1];
+//                    mergedNode->children[2] = parentNode->children[nodeIndex+1]->children[0];
+//                    mergedNode->children[3] = parentNode->children[nodeIndex+1]->children[1];
+//                    // Delete old children
+//                    delete parentNode->children[nodeIndex];
+//                    delete parentNode->children[nodeIndex + 1];
+//                    // Delete parent key
+//                    parentNode->deleteKey(parentNode->keys[nodeIndex]);
+//                    parentNode->children[nodeIndex + 1] = mergedNode;
+//                    // Rotate from right sibling.
+//                } else {
+//                    // Add key to left child
+//                    parentNode->children[nodeIndex]->insertKey(parentNode->keys[nodeIndex],parentNode->values[nodeIndex]);
+//                    // Delete old key from parent
+//                    parentNode->deleteKey(parentNode->keys[nodeIndex]);
+//                    // Add new key to parent
+//                    parentNode->insertKey(parentNode->children[nodeIndex + 1]->keys[0]);
+//                    // Delete key from right child
+//                    parentNode->children[nodeIndex + 1]->deleteKey(parentNode->children[nodeIndex + 1]->keys[0]);
+//                    // Link leftmost right child's child to rightmost left child's child.
+//                    parentNode->children[nodeIndex]->children[parentNode->children[nodeIndex]->numKeys] = parentNode->children[nodeIndex + 1]->children[0];
+//                }
+//                break;
+//
+//            case 3:
+//                // Merge left sibling
+//                if(parentNode->children[nodeIndex - 1]->numKeys == 1) {
+//                    auto *mergedNode = new two4Node<K,V>();
+//                    // Add Keys
+//                    mergedNode->numKeys = 3;
+//                    mergedNode->keys[0] = parentNode->children[nodeIndex - 1]->keys[0];
+//                    mergedNode->keys[1] = parentNode->keys[nodeIndex - 1];
+//                    mergedNode->keys[2] = parentNode->children[nodeIndex]->keys[0];
+//                    // Add Values
+//                    mergedNode->values[0] = parentNode->children[nodeIndex - 1]->values[0];
+//                    mergedNode->values[1] = parentNode->values[nodeIndex - 1];
+//                    mergedNode->values[2] = parentNode->children[nodeIndex]->values[0];
+//                    // Link Children
+//                    mergedNode->children[0] = parentNode->children[nodeIndex - 1]->children[0];
+//                    mergedNode->children[1] = parentNode->children[nodeIndex - 1]->children[1];
+//                    mergedNode->children[2] = parentNode->children[nodeIndex]->children[0];
+//                    mergedNode->children[3] = parentNode->children[nodeIndex]->children[1];
+//                    // Delete old children
+//                    delete parentNode->children[nodeIndex - 1];
+//                    delete parentNode->children[nodeIndex];
+//                    // Delete parent key
+//                    parentNode->deleteKey(parentNode->keys[nodeIndex - 1]);
+//                    parentNode->children[nodeIndex] = mergedNode;
+//                    // Rotate from left sibling
+//                } else {
+//                    // Add key to left child
+//                    parentNode->children[nodeIndex]->insertKey(parentNode->keys[nodeIndex - 1]);
+//                    // Delete old key from parent
+//                    parentNode->deleteKey(parentNode->keys[nodeIndex - 1]);
+//                    // Add new key to parent
+//                    parentNode->insertKey(parentNode->children[nodeIndex - 1]->keys[parentNode->children[nodeIndex - 1]->numKeys]);
+//                    // Delete key from right child
+//                    parentNode->children[nodeIndex - 1]->deleteKey(parentNode->children[nodeIndex - 1]->keys[parentNode->children[nodeIndex - 1]->numKeys]);
+//                    // Link leftmost right child's child to rightmost left child's child.
+//                    parentNode->children[nodeIndex]->children[0] = parentNode->children[nodeIndex - 1]->children[parentNode->children[nodeIndex - 1]->numKeys];
+//                }
+//                break;
+//
+//            default:
+//                std::cout << "Default Case Reached?" << std::endl;
+//                return;
+//        }
+//    }
 
     void preorderHelper(two4Node<K,V> *currentNode) {
         if(currentNode != nullptr) {
