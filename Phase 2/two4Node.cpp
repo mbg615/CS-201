@@ -37,8 +37,8 @@ public:
         while(i >= 0 && keys[i] > key) {
             keys[i + 1] = keys[i];
             values[i + 1] = values[i];
-            children[i + 2] = children[i + 1];
-            children[i + 1] = children[i];
+//            children[i + 2] = children[i + 1];
+//            children[i + 1] = children[i];
             i--;
         }
 
@@ -51,25 +51,25 @@ public:
         }
     }
 
-    void deleteKey(K key) {
-        int i = 0;
-        while(i < numKeys && key > keys[i]) {
-            i++;
-        }
-
-        if(isLeaf()) {
-            int j = i;
-            while(j < numKeys) {
-                keys[j] = keys[j + 1];
-                values[j] = values[j + 1];
-            }
-            return;
-        }
-
-        // ToDo: Finish
-
-
-    }
+//    void deleteKey(K key) {
+//        int i = 0;
+//        while(i < numKeys && key > keys[i]) {
+//            i++;
+//        }
+//
+//        if(isLeaf()) {
+//            int j = i;
+//            while(j < numKeys) {
+//                keys[j] = keys[j + 1];
+//                values[j] = values[j + 1];
+//            }
+//            return;
+//        }
+//
+//        // ToDo: Finish
+//
+//
+//    }
 
 //    int deleteKey(K key) {
 //        // ToDO: Verify this is correct

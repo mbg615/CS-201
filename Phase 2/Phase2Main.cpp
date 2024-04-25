@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+//#include "dylanMatherTree.cpp"
 #include "two4Tree.cpp"
 
 int main(){
@@ -74,6 +75,8 @@ int main(){
 
     cout << T2.size() << endl;
     //Should output 13
+
+    return 0;
 
     two4Tree<int,int> X;
     for (int i=1;i<1001000;i++) X.insert(i,i);
