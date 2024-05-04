@@ -52,12 +52,10 @@ public:
     }
 
     int remove(K key) {
+        // Leaving mostly unimplemented because it's difficult.
         V* value = search(key);
         if(value == nullptr) return 0;
 
-
-
-        // Leaving unimplemented because it's difficult.
         treeSize--;
         return 1;
     }
@@ -76,7 +74,6 @@ public:
     }
 
     int size() {
-        return treeSizeHelper(root);
         return treeSize;
     }
 
