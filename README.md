@@ -1,5 +1,5 @@
 # CS-201
-This repository holds most of the code I write during my Computer Science 201 class at the University of Alabama.
+This repository holds most of the code I wrote during my Computer Science 201 class at the University of Alabama.
 
 ## Projects
 
